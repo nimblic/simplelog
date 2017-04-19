@@ -1,28 +1,32 @@
 package simplelog
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 	"sync/atomic"
 )
 
+type Level int32
+
 const (
 	// LevelDebug logs everything
-	LevelDebug int32 = 1
+	LevelDebug Level = 1
 
 	// LevelInfo logs Info, Notices, Warnings and Errors
-	LevelInfo int32 = 2
+	LevelInfo Level = 2
 
 	// LevelNotice logs Notices, Warnings and Errors
-	LevelNotice int32 = 4
+	LevelNotice Level = 4
 
 	// LevelWarn logs Warning and Errors
-	LevelWarn int32 = 8
+	LevelWarn Level = 8
 
 	// LevelError logs just Errors
-	LevelError int32 = 16
+	LevelError Level = 16
 )
 
 type simpleLog struct {
@@ -32,6 +36,25 @@ type simpleLog struct {
 	Notice   *log.Logger
 	Warning  *log.Logger
 	Error    *log.Logger
+}
+
+// ParseLevel takes a string level and returns the simplelog level constant.
+func ParseLevel(lvl string) (Level, error) {
+	switch strings.ToLower(lvl) {
+	case "error", "err":
+		return LevelError, nil
+	case "warn", "warning":
+		return LevelWarn, nil
+	case "notice":
+		return LevelNotice, nil
+	case "info":
+		return LevelInfo, nil
+	case "debug":
+		return LevelDebug, nil
+	}
+
+	var l Level
+	return l, fmt.Errorf("not a valid Level: %q", lvl)
 }
 
 // log maintains a pointer to a singleton for the logging system.
