@@ -2,7 +2,6 @@ package simplelog
 
 import (
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -62,13 +61,12 @@ var logger simpleLog
 
 // Called to init the logging system.
 func init() {
-	log.SetPrefix("DEBUG")
 	log.SetFlags(log.Ldate | log.Ltime)
 }
 
 // Start initializes simpleLog and only displays the specified logging level.
 func Start(logLevel Level) {
-	turnOnLogging(int32(logLevel), nil)
+	turnOnLogging(int32(logLevel))
 }
 
 // LogLevel returns the configured logging level.
@@ -77,7 +75,7 @@ func LogLevel() int32 {
 }
 
 // turnOnLogging configures the logging writers.
-func turnOnLogging(logLevel int32, fileHandle io.Writer) {
+func turnOnLogging(logLevel int32) {
 	debugHandle := ioutil.Discard
 	infoHandle := ioutil.Discard
 	noticeHandle := ioutil.Discard
@@ -114,11 +112,11 @@ func turnOnLogging(logLevel int32, fileHandle io.Writer) {
 		errorHandle = os.Stderr
 	}
 
-	logger.Debug = log.New(debugHandle, "DEBUG: ", log.Ldate|log.Ltime)
-	logger.Info = log.New(infoHandle, "INFO: ", log.Ldate|log.Ltime)
-	logger.Notice = log.New(noticeHandle, "NOTICE: ", log.Ldate|log.Ltime)
-	logger.Warning = log.New(warnHandle, "WARNING: ", log.Ldate|log.Ltime)
-	logger.Error = log.New(errorHandle, "ERROR: ", log.Ldate|log.Ltime)
+	logger.Debug = log.New(debugHandle, "", log.Ldate|log.Ltime)
+	logger.Info = log.New(infoHandle, "", log.Ldate|log.Ltime)
+	logger.Notice = log.New(noticeHandle, "", log.Ldate|log.Ltime)
+	logger.Warning = log.New(warnHandle, "", log.Ldate|log.Ltime)
+	logger.Error = log.New(errorHandle, "", log.Ldate|log.Ltime)
 
 	atomic.StoreInt32(&logger.LogLevel, logLevel)
 }
