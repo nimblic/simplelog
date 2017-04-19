@@ -66,9 +66,9 @@ func ParseLevel(lvl string) (Level, error) {
 // log maintains a pointer to a singleton for the logging system.
 var logger simpleLog
 
-// Called to init the logging system.
-func init() {
-	log.SetFlags(log.Ldate | log.Ltime)
+func New(logLevel Level) simpleLog {
+	Start(logLevel)
+	return logger
 }
 
 // Start initializes simpleLog and only displays the specified logging level.
@@ -87,36 +87,28 @@ func turnOnLogging(logLevel int32) {
 	infoHandle := ioutil.Discard
 	noticeHandle := ioutil.Discard
 	warnHandle := ioutil.Discard
-	errorHandle := ioutil.Discard
+	errorHandle := os.Stderr
 
 	if logLevel&int32(LevelDebug) != 0 {
 		debugHandle = os.Stdout
 		infoHandle = os.Stdout
 		noticeHandle = os.Stdout
 		warnHandle = os.Stdout
-		errorHandle = os.Stderr
 	}
 
 	if logLevel&int32(LevelInfo) != 0 {
 		infoHandle = os.Stdout
 		warnHandle = os.Stdout
 		noticeHandle = os.Stdout
-		errorHandle = os.Stderr
 	}
 
 	if logLevel&int32(LevelNotice) != 0 {
 		warnHandle = os.Stdout
 		noticeHandle = os.Stdout
-		errorHandle = os.Stderr
 	}
 
 	if logLevel&int32(LevelWarn) != 0 {
 		warnHandle = os.Stdout
-		errorHandle = os.Stderr
-	}
-
-	if logLevel&int32(LevelError) != 0 {
-		errorHandle = os.Stderr
 	}
 
 	logger.Debug = log.New(debugHandle, "", 0)
