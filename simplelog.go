@@ -84,7 +84,7 @@ func turnOnLogging(logLevel int32, fileHandle io.Writer) {
 	warnHandle := ioutil.Discard
 	errorHandle := ioutil.Discard
 
-	if logLevel&LevelDebug != 0 {
+	if logLevel&int32(LevelDebug) != 0 {
 		debugHandle = os.Stdout
 		infoHandle = os.Stdout
 		noticeHandle = os.Stdout
@@ -92,25 +92,25 @@ func turnOnLogging(logLevel int32, fileHandle io.Writer) {
 		errorHandle = os.Stderr
 	}
 
-	if logLevel&LevelInfo != 0 {
+	if logLevel&int32(LevelInfo) != 0 {
 		infoHandle = os.Stdout
 		warnHandle = os.Stdout
 		noticeHandle = os.Stdout
 		errorHandle = os.Stderr
 	}
 
-	if logLevel&LevelNotice != 0 {
+	if logLevel&int32(LevelNotice) != 0 {
 		warnHandle = os.Stdout
 		noticeHandle = os.Stdout
 		errorHandle = os.Stderr
 	}
 
-	if logLevel&LevelWarn != 0 {
+	if logLevel&int32(LevelWarn) != 0 {
 		warnHandle = os.Stdout
 		errorHandle = os.Stderr
 	}
 
-	if logLevel&LevelError != 0 {
+	if logLevel&int32(LevelError) != 0 {
 		errorHandle = os.Stderr
 	}
 
