@@ -11,6 +11,8 @@ import (
 
 type Level int32
 
+var dateTimeFormat = "2006-01-02 15:04:05.000"
+
 const (
 	// LevelDebug logs everything
 	LevelDebug Level = 1
@@ -35,6 +37,11 @@ type simpleLog struct {
 	Notice   *log.Logger
 	Warning  *log.Logger
 	Error    *log.Logger
+}
+
+//SetTimestampFormat sets for format for log entry timestamps
+func SetTimestampFormat(f string) {
+	dateTimeFormat = f
 }
 
 // ParseLevel takes a string level and returns the simplelog level constant.
@@ -112,11 +119,11 @@ func turnOnLogging(logLevel int32) {
 		errorHandle = os.Stderr
 	}
 
-	logger.Debug = log.New(debugHandle, "", log.Ldate|log.Ltime)
-	logger.Info = log.New(infoHandle, "", log.Ldate|log.Ltime)
-	logger.Notice = log.New(noticeHandle, "", log.Ldate|log.Ltime)
-	logger.Warning = log.New(warnHandle, "", log.Ldate|log.Ltime)
-	logger.Error = log.New(errorHandle, "", log.Ldate|log.Ltime)
+	logger.Debug = log.New(debugHandle, "", 0)
+	logger.Info = log.New(infoHandle, "", 0)
+	logger.Notice = log.New(noticeHandle, "", 0)
+	logger.Warning = log.New(warnHandle, "", 0)
+	logger.Error = log.New(errorHandle, "", 0)
 
 	atomic.StoreInt32(&logger.LogLevel, logLevel)
 }
