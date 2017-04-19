@@ -67,8 +67,8 @@ func init() {
 }
 
 // Start initializes simpleLog and only displays the specified logging level.
-func Start(logLevel int32) {
-	turnOnLogging(logLevel, nil)
+func Start(logLevel Level) {
+	turnOnLogging(int32(logLevel), nil)
 }
 
 // LogLevel returns the configured logging level.
