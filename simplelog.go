@@ -71,7 +71,7 @@ func StartLogger(logLevel Level) simpleLog {
 	return logger
 }
 
-func GetLogger() simpleLog {
+func GetErrorLogger() simpleLog {
 	//TODO: allow us to get different loggers (WarningLogger, NoticeLogger etc) to Print to different levels
 	return logger
 }
