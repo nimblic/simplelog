@@ -8,6 +8,21 @@ import (
 	"time"
 )
 
+//Printf outputs a formatted log message to the error output
+func Println(a ...interface{}) {
+	logger.Error.Output(2, fmt.Sprintf("time=%q level=\"ERROR\" msg=%q\n", time.Now().Format(dateTimeFormat), fmt.Sprintln(a...)))
+}
+
+//Println outputs a formatted log message to the error output
+func Printf(format string, a ...interface{}) {
+	logger.Error.Output(2, fmt.Sprintf("time=%q level=\"ERROR\" msg=%q\n", time.Now().Format(dateTimeFormat), fmt.Sprintf(format, a...)))
+}
+
+//Print outputs a log message to the error output
+func Print(message string) {
+	logger.Error.Output(2, fmt.Sprintf("time=%q level=\"ERROR\" msg=%q\n", time.Now().Format(dateTimeFormat), message))
+}
+
 //Debugf outputs a formatted log message to the debug output
 func Debugf(format string, a ...interface{}) {
 	logger.Debug.Output(2, fmt.Sprintf("time=%q level=\"DEBUG\" msg=%q\n", time.Now().Format(dateTimeFormat), fmt.Sprintf(format, a...)))
