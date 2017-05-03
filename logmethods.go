@@ -90,6 +90,14 @@ func Warning(message string) {
 	logger.Warning.Output(2, fmt.Sprintf("time=%q level=\"WARNING\" msg=%q\n", time.Now().Format(dateTimeFormat), message))
 }
 
+func Warnf(format string, a ...interface{}) {
+	Warningf(format, a)
+}
+
+func Warn(message string) {
+	Warning(message)
+}
+
 //Warningm outputs a set of key-value pairs to the warning output
 func Warningm(message string, vals map[string]string) {
 	s := fmt.Sprintf("time=%q level=\"WARNING\" msg=%q\n", time.Now().Format(dateTimeFormat), message)
