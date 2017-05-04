@@ -71,23 +71,6 @@ func StartLogger(logLevel Level) simpleLog {
 	return logger
 }
 
-func GetErrorLogger() simpleLog {
-	//TODO: allow us to get different loggers (WarningLogger, NoticeLogger etc) to Print to different levels
-	return logger
-}
-
-func (l simpleLog) Print(message string) {
-	Print(message)
-}
-
-func (l simpleLog) Println(a ...interface{}) {
-	Println(a...)
-}
-
-func (l simpleLog) Printf(format string, a ...interface{}) {
-	Printf(format, a...)
-}
-
 // Start initializes simpleLog and only displays the specified logging level.
 func Start(logLevel Level) {
 	turnOnLogging(int32(logLevel))

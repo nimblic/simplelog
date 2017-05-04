@@ -5,22 +5,23 @@ package simplelog
 
 import (
 	"fmt"
+	"log"
 	"time"
 )
 
 //Printf outputs a formatted log message to the error output
-func Println(a ...interface{}) {
-	logger.Error.Output(2, fmt.Sprintf("time=%q level=\"ERROR\" msg=%q\n", time.Now().Format(dateTimeFormat), fmt.Sprintln(a...)))
+func Println(logger *log.Logger, level string, a ...interface{}) {
+	logger.Output(2, fmt.Sprintf("time=%q level=%q msg=%q\n", time.Now().Format(dateTimeFormat), level, fmt.Sprintln(a...)))
 }
 
 //Println outputs a formatted log message to the error output
-func Printf(format string, a ...interface{}) {
-	logger.Error.Output(2, fmt.Sprintf("time=%q level=\"ERROR\" msg=%q\n", time.Now().Format(dateTimeFormat), fmt.Sprintf(format, a...)))
+func Printf(logger *log.Logger, level string, format string, a ...interface{}) {
+	logger.Output(2, fmt.Sprintf("time=%q level=%q msg=%q\n", time.Now().Format(dateTimeFormat), level, fmt.Sprintf(format, a...)))
 }
 
 //Print outputs a log message to the error output
-func Print(message string) {
-	logger.Error.Output(2, fmt.Sprintf("time=%q level=\"ERROR\" msg=%q\n", time.Now().Format(dateTimeFormat), message))
+func Print(logger *log.Logger, level string, message string) {
+	logger.Output(2, fmt.Sprintf("time=%q level=%q msg=%q\n", time.Now().Format(dateTimeFormat), level, message))
 }
 
 //Debugf outputs a formatted log message to the debug output
