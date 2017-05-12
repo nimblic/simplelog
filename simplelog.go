@@ -66,14 +66,10 @@ func ParseLevel(lvl string) (Level, error) {
 // log maintains a pointer to a singleton for the logging system.
 var logger simpleLog
 
-func StartLogger(logLevel Level) simpleLog {
-	Start(logLevel)
-	return logger
-}
-
-// Start initializes simpleLog and only displays the specified logging level.
-func Start(logLevel Level) {
+// Init initializes simplelog to only display logs at or above the specified logging level, and returns a pointer to the logger
+func Init(logLevel Level) *simpleLog {
 	turnOnLogging(int32(logLevel))
+	return &logger
 }
 
 // LogLevel returns the configured logging level.

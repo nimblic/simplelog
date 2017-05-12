@@ -4,6 +4,7 @@
 package simplelog
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -26,16 +27,25 @@ func Print(logger *log.Logger, level string, message string) {
 
 //Debugf outputs a formatted log message to the debug output
 func Debugf(format string, a ...interface{}) {
+	if logger.Debug == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	logger.Debug.Output(2, fmt.Sprintf("time=%q level=\"DEBUG\" msg=%q\n", time.Now().Format(dateTimeFormat), fmt.Sprintf(format, a...)))
 }
 
 //Debug outputs a log message to the debug output
 func Debug(message string) {
+	if logger.Debug == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	logger.Debug.Output(2, fmt.Sprintf("time=%q level=\"DEBUG\" msg=%q\n", time.Now().Format(dateTimeFormat), message))
 }
 
 //Debugm outputs a set of key-value pairs to the debug output
 func Debugm(message string, vals map[string]string) {
+	if logger.Debug == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	s := fmt.Sprintf("time=%q level=\"DEBUG\" msg=%q\n", time.Now().Format(dateTimeFormat), message)
 	for k, v := range vals {
 		s += fmt.Sprintf("%s=%q", k, v)
@@ -45,16 +55,25 @@ func Debugm(message string, vals map[string]string) {
 
 //Infof outputs a formatted log message to the info output
 func Infof(format string, a ...interface{}) {
+	if logger.Info == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	logger.Info.Output(2, fmt.Sprintf("time=%q level=\"INFO\" msg=%q\n", time.Now().Format(dateTimeFormat), fmt.Sprintf(format, a...)))
 }
 
 //Info outputs a log message to the info output
 func Info(message string) {
+	if logger.Info == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	logger.Info.Output(2, fmt.Sprintf("time=%q level=\"INFO\" msg=%q\n", time.Now().Format(dateTimeFormat), message))
 }
 
 //Infom outputs a set of key-value pairs to the Info output
 func Infom(message string, vals map[string]string) {
+	if logger.Info == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	s := fmt.Sprintf("time=%q level=\"INFO\" msg=%q\n", time.Now().Format(dateTimeFormat), message)
 	for k, v := range vals {
 		s += fmt.Sprintf("%s=%q", k, v)
@@ -64,16 +83,25 @@ func Infom(message string, vals map[string]string) {
 
 //Noticef outputs a formatted log message to the notice output
 func Noticef(format string, a ...interface{}) {
+	if logger.Notice == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	logger.Notice.Output(2, fmt.Sprintf("time=%q level=\"NOTICE\" msg=%q\n", time.Now().Format(dateTimeFormat), fmt.Sprintf(format, a...)))
 }
 
 //Notice outputs a message to the notice output
 func Notice(message string) {
+	if logger.Notice == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	logger.Notice.Output(2, fmt.Sprintf("time=%q level=\"NOTICE\" msg=%q\n", time.Now().Format(dateTimeFormat), message))
 }
 
 //Noticem outputs a set of key-value pairs to the notice output
 func Noticem(message string, vals map[string]string) {
+	if logger.Notice == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	s := fmt.Sprintf("time=%q level=\"NOTICE\" msg=%q\n", time.Now().Format(dateTimeFormat), message)
 	for k, v := range vals {
 		s += fmt.Sprintf("%s=%q", k, v)
@@ -83,24 +111,39 @@ func Noticem(message string, vals map[string]string) {
 
 //Warningf outputs a formatted log message to the warning output
 func Warningf(format string, a ...interface{}) {
+	if logger.Warning == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	logger.Warning.Output(2, fmt.Sprintf("time=%q level=\"WARNING\" msg=%q\n", time.Now().Format(dateTimeFormat), fmt.Sprintf(format, a...)))
 }
 
 //Warning outputs a message to the warning output
 func Warning(message string) {
+	if logger.Warning == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	logger.Warning.Output(2, fmt.Sprintf("time=%q level=\"WARNING\" msg=%q\n", time.Now().Format(dateTimeFormat), message))
 }
 
 func Warnf(format string, a ...interface{}) {
+	if logger.Warning == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	Warningf(format, a)
 }
 
 func Warn(message string) {
+	if logger.Warning == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	Warning(message)
 }
 
 //Warningm outputs a set of key-value pairs to the warning output
 func Warningm(message string, vals map[string]string) {
+	if logger.Warning == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	s := fmt.Sprintf("time=%q level=\"WARNING\" msg=%q\n", time.Now().Format(dateTimeFormat), message)
 	for k, v := range vals {
 		s += fmt.Sprintf("%s=%q", k, v)
@@ -110,16 +153,25 @@ func Warningm(message string, vals map[string]string) {
 
 //Errorf outputs a formatted log message to the error output
 func Errorf(format string, a ...interface{}) {
+	if logger.Error == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	logger.Error.Output(2, fmt.Sprintf("time=%q level=\"ERROR\" msg=%q\n", time.Now().Format(dateTimeFormat), fmt.Sprintf(format, a...)))
 }
 
 //Error outputs a message to the error output
 func Error(message string) {
+	if logger.Error == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	logger.Error.Output(2, fmt.Sprintf("time=%q level=\"ERROR\" msg=%q\n", time.Now().Format(dateTimeFormat), message))
 }
 
 //Errorm outputs a set of key-value pairs to the error output
 func Errorm(message string, vals map[string]string) {
+	if logger.Error == nil {
+		panic(errors.New("Logger not initialized!"))
+	}
 	s := fmt.Sprintf("time=%q level=\"ERROR\" msg=%q\n", time.Now().Format(dateTimeFormat), message)
 	for k, v := range vals {
 		s += fmt.Sprintf("%s=%q", k, v)
