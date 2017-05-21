@@ -66,6 +66,11 @@ func ParseLevel(lvl string) (Level, error) {
 // log maintains a pointer to a singleton for the logging system.
 var logger simpleLog
 
+// Used to retrieve the current logger for sending to external libs (look at fhir_client.go in hl7processor)
+func Logger() *simpleLog {
+	return &logger
+}
+
 // Init initializes simplelog to only display logs at or above the specified logging level, and returns a pointer to the logger
 func Init(logLevel Level) *simpleLog {
 	turnOnLogging(int32(logLevel))
