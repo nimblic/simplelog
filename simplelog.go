@@ -1,6 +1,7 @@
 package simplelog
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -11,7 +12,11 @@ import (
 
 type Level int32
 
-var dateTimeFormat = "2006-01-02 15:04:05.000"
+var (
+	dateTimeFormat = "2006-01-02 15:04:05.000"
+	persistLog     = false
+	messageLog     []string
+)
 
 const (
 	// LevelDebug logs everything
@@ -39,9 +44,67 @@ type simpleLog struct {
 	Error    *log.Logger
 }
 
+//ArrayWriter appends writes to an array of strings
+type ArrayWriter struct{}
+
+func (a ArrayWriter) Write(p []byte) (n int, err error) {
+	s := string(p)
+	messageLog = append(messageLog, s)
+	fmt.Print(s)
+	return len(p), nil
+}
+
+var arrayWriter = ArrayWriter{}
+
 //SetTimestampFormat sets for format for log entry timestamps
 func SetTimestampFormat(f string) {
 	dateTimeFormat = f
+}
+
+//PersistLog will store messages in an array for testing purposes
+func PersistLog(p bool) {
+	if p {
+		logger.Debug.SetOutput(arrayWriter)
+		logger.Info.SetOutput(arrayWriter)
+		logger.Notice.SetOutput(arrayWriter)
+		logger.Warning.SetOutput(arrayWriter)
+		logger.Error.SetOutput(arrayWriter)
+	} else {
+		setLoggingLevel(logger.LogLevel)
+	}
+}
+
+//return the array of all logged messages
+func GetMessages() []string {
+	return messageLog
+}
+
+type logEntry struct {
+	Time  string `json:"time"`
+	Msg   string `json:"msg"`
+	Level string `json:"level"`
+}
+
+//return true if the a message has been logged
+func LogContainsMessage(message string) bool {
+	return LogContains(message, "")
+}
+
+//return true if the a message with a given level has been logged
+func LogContains(message string, level string) bool {
+	for _, m := range messageLog {
+		var e logEntry
+		err := json.Unmarshal([]byte(m), &e)
+		if err != nil {
+			panic(fmt.Errorf("Invalid log entry: %s", m))
+		}
+		if e.Msg == message {
+			if level == "" || e.Level == level {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // ParseLevel takes a string level and returns the simplelog level constant.
@@ -73,7 +136,7 @@ func Logger() *simpleLog {
 
 // Init initializes simplelog to only display logs at or above the specified logging level, and returns a pointer to the logger
 func Init(logLevel Level) *simpleLog {
-	turnOnLogging(int32(logLevel))
+	setLoggingLevel(int32(logLevel))
 	return &logger
 }
 
@@ -83,7 +146,7 @@ func LogLevel() int32 {
 }
 
 // turnOnLogging configures the logging writers.
-func turnOnLogging(logLevel int32) {
+func setLoggingLevel(logLevel int32) {
 	debugHandle := ioutil.Discard
 	infoHandle := ioutil.Discard
 	noticeHandle := ioutil.Discard
