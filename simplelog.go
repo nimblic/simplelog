@@ -79,7 +79,15 @@ func GetMessages() []string {
 	return messageLog
 }
 
-type logEntry struct {
+func GetLogs() []LogEntry {
+	logs := make([]LogEntry, len(messageLog))
+	for i, l := range messageLog {
+		json.Unmarshal([]byte(l), &logs[i])
+	}
+	return logs
+}
+
+type LogEntry struct {
 	Time  string `json:"time"`
 	Msg   string `json:"msg"`
 	Level string `json:"level"`
@@ -93,7 +101,7 @@ func LogContainsMessage(message string) bool {
 //return true if the a message with a given level has been logged
 func LogContains(message string, level string) bool {
 	for _, m := range messageLog {
-		var e logEntry
+		var e LogEntry
 		err := json.Unmarshal([]byte(m), &e)
 		if err != nil {
 			panic(fmt.Errorf("Invalid log entry: %s", m))
