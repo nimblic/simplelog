@@ -2,7 +2,7 @@ package simplelog
 
 type verboseLogger struct{}
 
-func GetverboseLogger() verboseLogger {
+func GetVerboseLogger() verboseLogger {
 	//TODO: allow us to get different loggers (WarningLogger, NoticeLogger etc) to Print to different levels
 	return verboseLogger{}
 }
