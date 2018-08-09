@@ -19,24 +19,28 @@ var (
 )
 
 const (
-	// LevelDebug logs everything
-	LevelDebug Level = 1
+	//LevelVerboseDebug logs everything
+	LevelVerboseDebug Level = 1
+
+	// LevelDebug logs everything except verbose debug messages
+	LevelDebug Level = 2
 
 	// LevelInfo logs Info, Notices, Warnings and Errors
-	LevelInfo Level = 2
+	LevelInfo Level = 4
 
 	// LevelNotice logs Notices, Warnings and Errors
-	LevelNotice Level = 4
+	LevelNotice Level = 8
 
 	// LevelWarn logs Warning and Errors
-	LevelWarn Level = 8
+	LevelWarn Level = 16
 
 	// LevelError logs just Errors
-	LevelError Level = 16
+	LevelError Level = 32
 )
 
 type simpleLog struct {
 	LogLevel int32
+	Verbose  *log.Logger
 	Debug    *log.Logger
 	Info     *log.Logger
 	Notice   *log.Logger
@@ -93,12 +97,12 @@ type LogEntry struct {
 	Level string `json:"level"`
 }
 
-//return true if the a message has been logged
+// LogContainsMessage return true if 'message' has been logged
 func LogContainsMessage(message string) bool {
 	return LogContains(message, "")
 }
 
-//return true if the a message with a given level has been logged
+// LogContains return true if a message with a given level has been logged
 func LogContains(message string, level string) bool {
 	for _, m := range messageLog {
 		var e LogEntry
@@ -128,6 +132,8 @@ func ParseLevel(lvl string) (Level, error) {
 		return LevelInfo, nil
 	case "debug":
 		return LevelDebug, nil
+	case "verbose":
+		return LevelVerboseDebug, nil
 	}
 
 	var l Level
@@ -155,11 +161,20 @@ func LogLevel() int32 {
 
 // turnOnLogging configures the logging writers.
 func setLoggingLevel(logLevel int32) {
+	verboseHandle := ioutil.Discard
 	debugHandle := ioutil.Discard
 	infoHandle := ioutil.Discard
 	noticeHandle := ioutil.Discard
 	warnHandle := ioutil.Discard
 	errorHandle := os.Stderr
+
+	if logLevel&int32(LevelVerboseDebug) != 0 {
+		verboseHandle = os.Stdout
+		debugHandle = os.Stdout
+		infoHandle = os.Stdout
+		noticeHandle = os.Stdout
+		warnHandle = os.Stdout
+	}
 
 	if logLevel&int32(LevelDebug) != 0 {
 		debugHandle = os.Stdout
@@ -183,6 +198,7 @@ func setLoggingLevel(logLevel int32) {
 		warnHandle = os.Stdout
 	}
 
+	logger.Verbose = log.New(verboseHandle, "", 0)
 	logger.Debug = log.New(debugHandle, "", 0)
 	logger.Info = log.New(infoHandle, "", 0)
 	logger.Notice = log.New(noticeHandle, "", 0)
