@@ -32,7 +32,7 @@ func VerboseDebugf(format string, a ...interface{}) {
 	if logger.Verbose == nil {
 		panic(errors.New(ErrNotInitialized))
 	}
-	logger.Verbose.Output(2, fmt.Sprintf("{\"time\":%q, \"level\":\"Debug\", \"msg\":%q}\n", time.Now().Format(dateTimeFormat), fmt.Sprintf(format, a...)))
+	logger.Verbose.Output(2, fmt.Sprintf("{\"time\":%q, \"level\":\"DEBUG\", \"msg\":%q}\n", time.Now().Format(dateTimeFormat), fmt.Sprintf(format, a...)))
 }
 
 //VerboseDebug outputs a log message to the VerboseDebug output
@@ -40,7 +40,7 @@ func VerboseDebug(message string) {
 	if logger.Verbose == nil {
 		panic(errors.New(ErrNotInitialized))
 	}
-	logger.Verbose.Output(2, fmt.Sprintf("{\"time\":%q, \"level\":\"Debug\", \"msg\":%q}\n", time.Now().Format(dateTimeFormat), message))
+	logger.Verbose.Output(2, fmt.Sprintf("{\"time\":%q, \"level\":\"DEBUG\", \"msg\":%q}\n", time.Now().Format(dateTimeFormat), message))
 }
 
 //VerboseDebugm outputs a set of key-value pairs to the VerboseDebug output
@@ -48,7 +48,7 @@ func VerboseDebugm(message string, vals map[string]string) {
 	if logger.Verbose == nil {
 		panic(errors.New(ErrNotInitialized))
 	}
-	s := fmt.Sprintf("{\"time\":%q, \"level\":\"Debug\", \"msg\":%q", time.Now().Format(dateTimeFormat), message)
+	s := fmt.Sprintf("{\"time\":%q, \"level\":\"DEBUG\", \"msg\":%q", time.Now().Format(dateTimeFormat), message)
 	for k, v := range vals {
 		s += fmt.Sprintf(", \"%s\":%q", k, v)
 	}
