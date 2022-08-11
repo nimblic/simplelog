@@ -174,7 +174,7 @@ func Warningm(message string, vals map[string]string) {
 
 // Warnf outputs a message to the warning output
 func Warnf(format string, a ...interface{}) {
-	Warningf(format, a)
+	Warningf(format, a...)
 }
 
 // Warn outputs a message to the warning output
