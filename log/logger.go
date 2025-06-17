@@ -30,6 +30,10 @@ var loggerSingleton *MedLog
 var once sync.Once
 var usePrettyPrintLogger = false
 
+func PersistLog(_ bool) {
+	// This function to make it easier to port existing code
+}
+
 func Init(level slog.Level) *MedLog {
 	var defaultLogLevel slog.Level
 	defaultLogLevel = level
