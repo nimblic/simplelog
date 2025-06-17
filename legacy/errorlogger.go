@@ -1,4 +1,4 @@
-package log
+package legacy
 
 type errorLogger struct{}
 
@@ -8,13 +8,13 @@ func GetErrorLogger() errorLogger {
 }
 
 func (l errorLogger) Print(message string) {
-	Errorf("ERROR: %s", message)
+	Print(logger.Error, "ERROR", message)
 }
 
 func (l errorLogger) Println(a ...interface{}) {
-	Errorf("ERROR: %s", a...)
+	Println(logger.Error, "ERROR", a...)
 }
 
 func (l errorLogger) Printf(format string, a ...interface{}) {
-	Errorf("ERROR: %s", a...)
+	Printf(logger.Error, "ERROR", format, a...)
 }

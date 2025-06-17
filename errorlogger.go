@@ -8,13 +8,13 @@ func GetErrorLogger() errorLogger {
 }
 
 func (l errorLogger) Print(message string) {
-	Print(logger.Error, "ERROR", message)
+	Errorf("ERROR: %s", message)
 }
 
 func (l errorLogger) Println(a ...interface{}) {
-	Println(logger.Error, "ERROR", a...)
+	Errorf("ERROR: %s", a...)
 }
 
 func (l errorLogger) Printf(format string, a ...interface{}) {
-	Printf(logger.Error, "ERROR", format, a...)
+	Errorf("ERROR: %s", a...)
 }

@@ -1,4 +1,4 @@
-package simplelog
+package legacy
 
 import (
 	"encoding/json"
@@ -48,7 +48,7 @@ type simpleLog struct {
 	Error    *log.Logger
 }
 
-//ArrayWriter appends writes to an array of strings
+// ArrayWriter appends writes to an array of strings
 type ArrayWriter struct{}
 
 func (a ArrayWriter) Write(p []byte) (n int, err error) {
@@ -60,12 +60,12 @@ func (a ArrayWriter) Write(p []byte) (n int, err error) {
 
 var arrayWriter = ArrayWriter{}
 
-//SetTimestampFormat sets for format for log entry timestamps
+// SetTimestampFormat sets for format for log entry timestamps
 func SetTimestampFormat(f string) {
 	dateTimeFormat = f
 }
 
-//PersistLog will store messages in an array for testing purposes
+// PersistLog will store messages in an array for testing purposes
 func PersistLog(p bool) {
 	if p {
 		logger.Debug.SetOutput(arrayWriter)
@@ -78,7 +78,7 @@ func PersistLog(p bool) {
 	}
 }
 
-//return the array of all logged messages
+// return the array of all logged messages
 func GetMessages() []string {
 	return messageLog
 }

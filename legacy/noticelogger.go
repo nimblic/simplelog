@@ -1,4 +1,4 @@
-package simplelog
+package legacy
 
 type noticeLogger struct{}
 

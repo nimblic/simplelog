@@ -1,4 +1,4 @@
-package log
+package simplelog
 
 // copied from this https://dusted.codes/creating-a-pretty-console-logger-using-gos-slog-package
 //https://github.com/dusted-go/logging/blob/main/prettylog/prettylog.go

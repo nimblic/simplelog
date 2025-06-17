@@ -1,7 +1,7 @@
 // simplelog is a super pared-back version of github.com/goingo/tracelog, modified for Nimblic's very basic requirements:
-// 	- Support for a number of logging levels, including a level in between info and warning
-// 	- Output logs in format \"level\":"LEVEL" msg="LOG_MSG"
-package simplelog
+//   - Support for a number of logging levels, including a level in between info and warning
+//   - Output logs in format \"level\":"LEVEL" msg="LOG_MSG"
+package legacy
 
 import (
 	"errors"
