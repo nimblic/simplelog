@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
-	"strings"
 	"sync"
 )
 
@@ -27,22 +26,23 @@ var loggerSingleton *MedLog
 var once sync.Once
 var usePrettyPrintLogger = false
 
-func Init(level string) *MedLog {
+func Init(level int) *MedLog {
 	var defaultLogLevel slog.Level
-	switch strings.ToLower(level) {
-	case "verbose":
-		defaultLogLevel = LevelVerbose
-	case "debug":
-		defaultLogLevel = slog.LevelDebug
-	case "info":
-		defaultLogLevel = slog.LevelInfo
-	case "notice":
-		defaultLogLevel = LevelNotice
-	case "warning":
-		defaultLogLevel = slog.LevelWarn
-	case "error":
-		defaultLogLevel = slog.LevelError
-	}
+	defaultLogLevel = slog.Level(level)
+	// switch strings.ToLower(level) {
+	// case "verbose":
+	// 	defaultLogLevel = LevelVerbose
+	// case "debug":
+	// 	defaultLogLevel = slog.LevelDebug
+	// case "info":
+	// 	defaultLogLevel = slog.LevelInfo
+	// case "notice":
+	// 	defaultLogLevel = LevelNotice
+	// case "warning":
+	// 	defaultLogLevel = slog.LevelWarn
+	// case "error":
+	// 	defaultLogLevel = slog.LevelError
+	// }
 	once.Do(func() {
 		opts := &slog.HandlerOptions{
 			// AddSource: true,
