@@ -77,9 +77,21 @@ func Init(level slog.Level) *MedLog {
 	return loggerSingleton
 }
 
-func Verbose(msg string, args ...any) {
+func VerboseSlog(ctx context.Context, msg string, args ...any) {
 	if loggerSingleton != nil {
 		loggerSingleton.Log(context.TODO(), LevelVerbose, msg, args...)
+	}
+}
+
+func VerboseDebugf(format string, args ...any) {
+	if loggerSingleton != nil {
+		loggerSingleton.Log(context.TODO(), LevelVerbose, fmt.Sprintf(format, args...))
+	}
+}
+
+func Verbose(format string) {
+	if loggerSingleton != nil {
+		loggerSingleton.Log(context.TODO(), LevelVerbose, fmt.Sprint(format))
 	}
 }
 
@@ -89,9 +101,15 @@ func Verbosef(format string, args ...any) {
 	}
 }
 
-func Debug(msg string, args ...any) {
+func DebugSlog(msg string, args ...any) {
 	if loggerSingleton != nil {
 		loggerSingleton.Debug(msg, args...)
+	}
+}
+
+func Debug(format string) {
+	if loggerSingleton != nil {
+		loggerSingleton.Debug(fmt.Sprint(format))
 	}
 }
 
@@ -101,20 +119,33 @@ func Debugf(format string, args ...any) {
 	}
 }
 
-func Info(msg string, args ...any) {
+func InfoSlog(msg string, args ...any) {
 	if loggerSingleton != nil {
 		loggerSingleton.Info(msg, args...)
 	}
 }
+
+func Info(format string) {
+	if loggerSingleton != nil {
+		loggerSingleton.Info(fmt.Sprint(format))
+	}
+}
+
 func Infof(format string, args ...any) {
 	if loggerSingleton != nil {
 		loggerSingleton.Info(fmt.Sprintf(format, args...))
 	}
 }
 
-func Notice(msg string, args ...any) {
+func NoticeSlog(msg string, args ...any) {
 	if loggerSingleton != nil {
 		loggerSingleton.Log(context.TODO(), LevelNotice, msg, args...)
+	}
+}
+
+func Notice(format string) {
+	if loggerSingleton != nil {
+		loggerSingleton.Log(context.TODO(), LevelNotice, fmt.Sprint(format))
 	}
 }
 
@@ -124,20 +155,39 @@ func Noticef(format string, args ...any) {
 	}
 }
 
-func Warning(msg string, args ...any) {
+func WarningSlog(msg string, args ...any) {
 	if loggerSingleton != nil {
 		loggerSingleton.Warn(msg, args...)
 	}
 }
+
+func Warn(format string) {
+	if loggerSingleton != nil {
+		loggerSingleton.Warn(fmt.Sprint(format))
+	}
+}
+
+func Warnf(format string, args ...any) {
+	if loggerSingleton != nil {
+		loggerSingleton.Warn(fmt.Sprintf(format, args...))
+	}
+}
+
 func Warningf(format string, args ...any) {
 	if loggerSingleton != nil {
 		loggerSingleton.Warn(fmt.Sprintf(format, args...))
 	}
 }
 
-func Error(msg string, args ...any) {
+func ErrorSlog(msg string, args ...any) {
 	if loggerSingleton != nil {
 		loggerSingleton.Error(msg, args...)
+	}
+}
+
+func Error(format string) {
+	if loggerSingleton != nil {
+		loggerSingleton.Error(fmt.Sprint(format))
 	}
 }
 
