@@ -10,9 +10,6 @@ import (
 )
 
 const (
-	LevelDebug   = slog.LevelDebug
-	LevelInfo    = slog.LevelInfo
-	LevelWarn    = slog.LevelWarn
 	LevelNotice  = slog.Level(2)
 	LevelVerbose = slog.Level(-5)
 )
