@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"strings"
 	"sync"
 )
 
@@ -32,6 +33,26 @@ var usePrettyPrintLogger = false
 
 func PersistLog(_ bool) {
 	// This function to make it easier to port existing code
+}
+
+func ParseLevel(lvl string) (slog.Level, error) {
+	switch strings.ToLower(lvl) {
+	case "error", "err":
+		return LevelError, nil
+	case "warn", "warning":
+		return LevelWarn, nil
+	case "notice":
+		return LevelNotice, nil
+	case "info":
+		return LevelInfo, nil
+	case "debug":
+		return LevelDebug, nil
+	case "verbose":
+		return LevelVerbose, nil
+	}
+
+	var l slog.Level
+	return l, fmt.Errorf("not a valid Level: %q", lvl)
 }
 
 func Init(level slog.Level) *MedLog {
