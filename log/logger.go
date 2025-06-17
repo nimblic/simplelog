@@ -30,9 +30,9 @@ var loggerSingleton *MedLog
 var once sync.Once
 var usePrettyPrintLogger = false
 
-func Init(level int) *MedLog {
+func Init(level slog.Level) *MedLog {
 	var defaultLogLevel slog.Level
-	defaultLogLevel = slog.Level(level)
+	defaultLogLevel = level
 	// switch strings.ToLower(level) {
 	// case "verbose":
 	// 	defaultLogLevel = LevelVerbose
