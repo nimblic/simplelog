@@ -114,6 +114,12 @@ func VerboseDebugf(format string, args ...any) {
 	}
 }
 
+func VerboseDebug(format string) {
+	if loggerSingleton != nil {
+		loggerSingleton.Log(context.TODO(), LevelVerbose, fmt.Sprint(format))
+	}
+}
+
 func Verbose(format string) {
 	if loggerSingleton != nil {
 		loggerSingleton.Log(context.TODO(), LevelVerbose, fmt.Sprint(format))
