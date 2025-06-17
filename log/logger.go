@@ -25,8 +25,9 @@ type MedLog struct {
 
 var loggerSingleton *MedLog
 var once sync.Once
+var usePrettyPrintLogger = false
 
-func Init(level string, usePrettyPrintLogger bool) *MedLog {
+func Init(level string) *MedLog {
 	var defaultLogLevel slog.Level
 	switch strings.ToLower(level) {
 	case "verbose":
