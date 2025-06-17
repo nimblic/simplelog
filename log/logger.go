@@ -186,6 +186,12 @@ func WarningSlog(msg string, args ...any) {
 	}
 }
 
+func Warning(format string) {
+	if loggerSingleton != nil {
+		loggerSingleton.Warn(fmt.Sprint(format))
+	}
+}
+
 func Warn(format string) {
 	if loggerSingleton != nil {
 		loggerSingleton.Warn(fmt.Sprint(format))
