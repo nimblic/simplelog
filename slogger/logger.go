@@ -66,17 +66,25 @@ func replaceAttr(_ []string, a slog.Attr) slog.Attr {
 	return a
 }
 
-// newHandler builds the slog handler for cfg writing to w. Kept separate from
-// Initialize (whose sync.Once makes it untestable across configs) so handler
-// behaviour can be exercised directly.
-func newHandler(cfg Config, w io.Writer) (slog.Handler, error) {
+// singletonLevel holds the singleton handler's level var so SetLevel can change
+// verbosity at runtime (the handler references it by pointer).
+var singletonLevel atomic.Pointer[slog.LevelVar]
+
+// newHandler builds the slog handler for cfg writing to w, and returns the
+// LevelVar backing it so callers can adjust the level at runtime. Kept separate
+// from Initialize (whose sync.Once makes it untestable across configs) so
+// handler behaviour can be exercised directly.
+func newHandler(cfg Config, w io.Writer) (slog.Handler, *slog.LevelVar, error) {
 	level, err := parseLevel(cfg.Level)
 	if err != nil {
-		return nil, fmt.Errorf("invalid log level: %w", err)
+		return nil, nil, fmt.Errorf("invalid log level: %w", err)
 	}
 
+	lv := new(slog.LevelVar)
+	lv.Set(level)
+
 	opts := &slog.HandlerOptions{
-		Level:     level,
+		Level:     lv,
 		AddSource: cfg.AddSource,
 	}
 	if cfg.SupportCustomLevels {
@@ -84,9 +92,9 @@ func newHandler(cfg Config, w io.Writer) (slog.Handler, error) {
 	}
 
 	if cfg.Format == "json" {
-		return slog.NewJSONHandler(w, opts), nil
+		return slog.NewJSONHandler(w, opts), lv, nil
 	}
-	return slog.NewTextHandler(w, opts), nil
+	return slog.NewTextHandler(w, opts), lv, nil
 }
 
 // Initialize sets up the logger singleton (call once at startup)
@@ -94,18 +102,35 @@ func Initialize(cfg Config) error {
 	var initErr error
 
 	once.Do(func() {
-		handler, err := newHandler(cfg, os.Stdout)
+		handler, lv, err := newHandler(cfg, os.Stdout)
 		if err != nil {
 			initErr = err
 			return
 		}
 
+		singletonLevel.Store(lv)
 		logger := slog.New(handler)
 		instance.Store(logger)
 		slog.SetDefault(logger)
 	})
 
 	return initErr
+}
+
+// SetLevel changes the singleton logger's verbosity at runtime. It returns an
+// error for an unknown level name. Safe to call after Initialize (it auto-inits
+// via get() if needed). "audit" is intentionally not accepted — audit records
+// are always emitted and the level must not be selectable as a filter.
+func SetLevel(lvl string) error {
+	l, ok := levelFromString(lvl)
+	if !ok {
+		return fmt.Errorf("invalid log level: %q", lvl)
+	}
+	get() // ensure the singleton (and its level var) exist
+	if lv := singletonLevel.Load(); lv != nil {
+		lv.Set(l)
+	}
+	return nil
 }
 
 // get returns the singleton logger instance (internal use)
@@ -192,22 +217,34 @@ func WithGroup(name string) *slog.Logger {
 	return get().WithGroup(name)
 }
 
-// parseLevel converts string to slog.Level
-func parseLevel(lvl string) (slog.Level, error) {
+// levelFromString maps a configurable level name to its slog.Level. ok is false
+// for unknown names. "audit" is deliberately absent — it is never selectable as
+// a verbosity threshold.
+func levelFromString(lvl string) (slog.Level, bool) {
 	switch strings.ToLower(lvl) {
 	case "debug":
-		return slog.LevelDebug, nil
+		return slog.LevelDebug, true
 	case "info":
-		return slog.LevelInfo, nil
+		return slog.LevelInfo, true
 	case "warn", "warning":
-		return slog.LevelWarn, nil
+		return slog.LevelWarn, true
 	case "error":
-		return slog.LevelError, nil
+		return slog.LevelError, true
 	case "notice":
-		return LevelNotice, nil
+		return LevelNotice, true
 	case "verbose":
-		return LevelVerbose, nil
+		return LevelVerbose, true
 	default:
-		return slog.LevelDebug, nil
+		return 0, false
 	}
+}
+
+// parseLevel converts string to slog.Level. It is lenient — an unknown name
+// falls back to Debug (Initialize keeps starting up). Use SetLevel/levelFromString
+// when an unknown level must be rejected.
+func parseLevel(lvl string) (slog.Level, error) {
+	if l, ok := levelFromString(lvl); ok {
+		return l, nil
+	}
+	return slog.LevelDebug, nil
 }
